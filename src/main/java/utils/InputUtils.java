@@ -1,9 +1,8 @@
 package utils;
 
-import java.time.LocalDate;
 import java.util.Scanner;
 
-public class GetInput {
+public class InputUtils {
 
     private static final Scanner input = new Scanner(System.in);
 
@@ -30,19 +29,4 @@ public class GetInput {
 
         return value;
     }
-
-    public static LocalDate getDate(){
-        LocalDate value;
-        while (true){
-            try {
-                value = LocalDate.parse(input.nextLine());
-                break;
-            } catch (Exception e) {
-                System.err.println("Invalid date format, please try again!");
-            }
-        }
-
-        return value;
-    }
-
 }

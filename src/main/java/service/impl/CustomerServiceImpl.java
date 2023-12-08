@@ -3,10 +3,9 @@ package service.impl;
 import entity.Customer;
 import entity.CustomerRepo;
 import service.CustomerService;
-import utils.GetInput;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import service.RepoService;
+import utils.InputUtils;
+import utils.ValidateUtils;
 
 public class CustomerServiceImpl implements CustomerService {
 
@@ -15,23 +14,21 @@ public class CustomerServiceImpl implements CustomerService {
         String name;
         String email;
         String tel;
+        RepoService repoService = new RepoServiceImpl();
         while (true){
             System.out.println("Please enter customer name: ");
-            name = GetInput.getString();
-            if (!name.matches(".*[a-zA-Z].*")){
+            name = InputUtils.getString();
+            if (ValidateUtils.nameValid(name) && repoService.checkNameExist(name)){
                 System.err.println("Invalid customer name, please try again!");
-                continue;
+                break;
             }
-            break;
+            System.err.println("Invalid customer name, please try again!");
         }
 
         while (true){
             System.out.println("Please enter customer email: ");
-            email = GetInput.getString();
-            String regex = "^(.+)@(.+)$";
-            Pattern pattern = Pattern.compile(regex);
-            Matcher matcher = pattern.matcher(email);
-            if (matcher.matches()){
+            email = InputUtils.getString();
+            if (ValidateUtils.emailValid(email)){
                 break;
             }
             System.out.println("Invalid email format!");
@@ -39,8 +36,8 @@ public class CustomerServiceImpl implements CustomerService {
 
         while (true){
             System.out.println("Please enter customer phone: ");
-            tel = GetInput.getString();
-            if (!tel.matches(".*[0-9].*")){
+            tel = InputUtils.getString();
+            if (!ValidateUtils.phoneValid(tel)){
                 System.err.println("Invalid customer phone number!");
                 continue;
             }
@@ -53,11 +50,6 @@ public class CustomerServiceImpl implements CustomerService {
         Customer c = new Customer(name, email, tel);
         CustomerRepo.getCustomerRepo().put(c.getName(), c);
         System.out.println("ADD CUSTOMER SUCCESSFULLY!");
-    }
-
-    @Override
-    public Customer findByName(String name) {
-        return CustomerRepo.getCustomerRepo().get(name);
     }
 
 }
